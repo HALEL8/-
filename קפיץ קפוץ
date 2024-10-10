@@ -1,0 +1,161 @@
+using UnityEngine;
+
+public class GameManager : MonoBehaviour
+{
+    public int playerCoins = 0;
+
+    void Start()
+    {
+        // התחלת המשחק
+        Debug.Log("Welcome to the Virtual World!");
+    }
+
+    void Update()
+    {
+        // עדכון המשחק בכל פריים
+    }
+
+    public void EarnCoins(int amount)
+    {
+        playerCoins += amount;
+        Debug.Log("Coins earned: " + amount);
+    }
+
+    public void SpendCoins(int amount)
+    {
+        if (playerCoins >= amount)
+        {
+            playerCoins -= amount;
+            Debug.Log("Coins spent: " + amount);
+        }
+        else
+        {
+            Debug.Log("Not enough coins!");
+        }
+    }
+}
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class SceneController : MonoBehaviour
+{
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+}
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float speed = 5.0f;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        rb.AddForce(movement * speed);
+    }
+}
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CoinManager : MonoBehaviour
+{
+    public int playerCoins = 0;
+    public Text coinText;
+
+    void Start()
+    {
+        UpdateCoinText();
+    }
+
+    public void EarnCoins(int amount)
+    {
+        playerCoins += amount;
+        UpdateCoinText();
+    }
+
+    public void SpendCoins(int amount)
+    {
+        if (playerCoins >= amount)
+        {
+            playerCoins -= amount;
+            UpdateCoinText();
+        }
+        else
+        {
+            Debug.Log("Not enough coins!");
+        }
+    }
+
+    void UpdateCoinText()
+    {
+        coinText.text = "Coins: " + playerCoins;
+    }
+}
+using UnityEngine;
+
+public class Shop : MonoBehaviour
+{
+    public CoinManager coinManager;
+
+    public void BuyItem(int cost)
+    {
+        coinManager.SpendCoins(cost);
+    }
+}
+
+public class Job : MonoBehaviour
+{
+    public CoinManager coinManager;
+    public int coinsPer10Minutes = 50;
+
+    public void Work()
+    {
+        coinManager.EarnCoins(coinsPer10Minutes);
+    }
+}
+using UnityEngine;
+
+public class Customization : MonoBehaviour
+{
+    public GameObject[] shirts;
+    public GameObject[] pants;
+    public GameObject[] shoes;
+
+    public void ChangeShirt(int index)
+    {
+        foreach (GameObject shirt in shirts)
+        {
+            shirt.SetActive(false);
+        }
+        shirts[index].SetActive(true);
+    }
+
+    public void ChangePants(int index)
+    {
+        foreach (GameObject pant in pants)
+        {
+            pant.SetActive(false);
+        }
+        pants[index].SetActive(true);
+    }
+
+    public void ChangeShoes(int index)
+    {
+        foreach (GameObject shoe in shoes)
+        {
+            shoe.SetActive(false);
+        }
+        shoes[index].SetActive(true);
+    }
+}
